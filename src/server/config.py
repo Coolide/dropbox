@@ -9,3 +9,5 @@ class Settings(BaseSettings):
     dest_dir: str = "dest"
     sync_secret: str = "dev-secret-change-me"
     cert_dir: str = ".certs"
+
+settings = Settings()
