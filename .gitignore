@@ -1,4 +1,27 @@
+# secrets & local config
 .env
+
+# docs (personal learning notes, not part of the project)
 docs/
+
+# Python build artefacts
 __pycache__/
 *.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# TLS certificates (generated at server startup)
+.certs/
+
+# Runtime data
+server_files/
+*.sync_manifest.json
+
+# macOS
+.DS_Store
+
+# Virtual environment
+.venv/
