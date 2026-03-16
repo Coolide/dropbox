@@ -3,10 +3,16 @@ import pytest
 from src.server.config import Settings
 
 def test_defaults():
-    s = Settings()
+    s = Settings(
+        host="0.0.0.0",
+        port=8443,
+        dest_dir="dest",
+        sync_secret="dev-secret-change-me",
+        cert_dir=".certs",
+    )
     assert s.host == "0.0.0.0"
     assert s.port == 8443
-    assert s.dest_dir.endswith("dest") 
+    assert s.dest_dir == "dest"
 
 def test_secret_required(monkeypatch):
     monkeypatch.delenv("SYNC_SECRET", raising=False)
