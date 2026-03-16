@@ -4,15 +4,17 @@ from pathlib import Path
 from src.client.manifest import Manifest, compute_sha256
 
 # Files and directories to never sync.
-IGNORE_PATTERNS: frozenset[str] = frozenset([
-    ".DS_Store",        # macOS folder metadata
-    "Thumbs.db",        # Windows thumbnail cache
-    "desktop.ini",      # Windows folder settings
-    ".git",             # git internals
-    ".venv",            # Python virtualenv
-    "__pycache__",      # Python bytecode cache
-    ".pytest_cache",    # pytest cache
-])
+IGNORE_PATTERNS: frozenset[str] = frozenset(
+    [
+        ".DS_Store",  # macOS folder metadata
+        "Thumbs.db",  # Windows thumbnail cache
+        "desktop.ini",  # Windows folder settings
+        ".git",  # git internals
+        ".venv",  # Python virtualenv
+        "__pycache__",  # Python bytecode cache
+        ".pytest_cache",  # pytest cache
+    ]
+)
 
 
 def should_ignore(relative_path: str) -> bool:

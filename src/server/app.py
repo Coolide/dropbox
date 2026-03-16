@@ -18,17 +18,20 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
     return app
 
+
 def run() -> None:
     import uvicorn
 
     settings = Settings()
     cert_path, key_path = ensure_certs(settings.cert_dir)
 
-    print(f"[server] Listening on https://{settings.host}:{settings.port}") #TODO: use logging instead
+    print(
+        f"[server] Listening on https://{settings.host}:{settings.port}"
+    )  # TODO: use logging instead
     print(f"[server] Storing files in: {settings.dest_dir}")
 
     uvicorn.run(
-        'src.server.app:create_app',
+        "src.server.app:create_app",
         factory=True,
         host=settings.host,
         port=settings.port,

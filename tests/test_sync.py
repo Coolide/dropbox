@@ -1,14 +1,15 @@
-import pytest
 from pathlib import Path
-from unittest.mock import MagicMock
+
 from src.client.manifest import Manifest, compute_sha256
-from src.client.sync import compute_diff, DiffResult
+from src.client.sync import compute_diff
+
 
 def test_new_file_detected(tmp_path: Path):
     (tmp_path / "new.txt").write_bytes(b"data")
     manifest = Manifest(tmp_path / "manifest.json")
     diff = compute_diff(source_dir=tmp_path, manifest=manifest)
     assert "new.txt" in diff.to_upload
+
 
 def test_changed_file_detected(tmp_path: Path):
     f = tmp_path / "changed.txt"
@@ -18,6 +19,7 @@ def test_changed_file_detected(tmp_path: Path):
 
     diff = compute_diff(source_dir=tmp_path, manifest=manifest)
     assert "changed.txt" in diff.to_upload
+
 
 def test_unchanged_file_skipped(tmp_path: Path):
     f = tmp_path / "same.txt"
@@ -29,6 +31,7 @@ def test_unchanged_file_skipped(tmp_path: Path):
     diff = compute_diff(source_dir=tmp_path, manifest=manifest)
     assert "same.txt" not in diff.to_upload
     assert "same.txt" not in diff.to_delete
+
 
 def test_deleted_file_detected(tmp_path: Path):
     manifest = Manifest(tmp_path / "manifest.json")

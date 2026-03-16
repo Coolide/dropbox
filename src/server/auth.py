@@ -8,7 +8,8 @@ from fastapi.responses import JSONResponse
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.types import ASGIApp
 
-TIMESTAMP_TOLERANCE = 300 # 5 minutes
+TIMESTAMP_TOLERANCE = 300  # 5 minutes
+
 
 def sign_request(
     method: str,
@@ -28,11 +29,12 @@ def sign_request(
 
     return {"X-Signature": signature, "X-Timestamp": timestamp}
 
+
 class HMACAuthMiddleware(BaseHTTPMiddleware):
     def __init__(self, app: ASGIApp, secret: str) -> None:
         super().__init__(app)
         self.secret = secret
-    
+
     async def dispatch(
         self,
         request: Request,
@@ -40,7 +42,7 @@ class HMACAuthMiddleware(BaseHTTPMiddleware):
     ) -> Response:
         if request.url.path == "/health":
             return await call_next(request)
-        
+
         sig_header = request.headers.get("X-Signature")
         timestamp_header = request.headers.get("X-Timestamp")
 
@@ -51,7 +53,7 @@ class HMACAuthMiddleware(BaseHTTPMiddleware):
             request_timestamp = int(timestamp_header)
         except ValueError:
             return JSONResponse(status_code=401, content={"error": "Invalid timestamp"})
-        
+
         if abs(time.time() - request_timestamp) > TIMESTAMP_TOLERANCE:
             return JSONResponse(status_code=401, content={"error": "Stale timestamp"})
 
@@ -67,5 +69,5 @@ class HMACAuthMiddleware(BaseHTTPMiddleware):
 
         if not hmac.compare_digest(sig_header, expected_signature):
             return JSONResponse(status_code=401, content={"error": "Invalid signature"})
-        
+
         return await call_next(request)

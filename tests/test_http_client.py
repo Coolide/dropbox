@@ -1,12 +1,12 @@
+import httpx
 import pytest
 import respx
-import httpx
 
-from pathlib import Path
 from src.client.http import SyncClient
 
 BASE_URL = "https://localhost:8443"
 SECRET = "test-secret-key"
+
 
 @respx.mock
 def test_upload_put_file():
@@ -17,6 +17,7 @@ def test_upload_put_file():
     client.upload("test.txt", b"hello")
     assert route.called
 
+
 @respx.mock
 def test_delete_sends_delete_request():
     route = respx.delete(f"{BASE_URL}/files/old.txt").mock(
@@ -26,6 +27,7 @@ def test_delete_sends_delete_request():
     client = SyncClient(base_url=BASE_URL, secret=SECRET, verify=False)
     client.delete("old.txt")
     assert route.called
+
 
 @respx.mock
 def test_upload_raises_on_server_error():

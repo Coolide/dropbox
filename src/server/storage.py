@@ -1,7 +1,9 @@
 from pathlib import Path
 
+
 class PathTraversalError(ValueError):
     pass
+
 
 class Storage:
     def __init__(self, root: str | Path) -> None:
@@ -12,7 +14,7 @@ class Storage:
         if not str(candidate).startswith(str(self.root)):
             raise PathTraversalError(f"Path '{relative}' escapes root '{self.root}'")
         return candidate
-    
+
     def write(self, relative: str, data: bytes) -> None:
         path = self._safe_path(relative)
         path.parent.mkdir(parents=True, exist_ok=True)

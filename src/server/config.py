@@ -1,5 +1,5 @@
-from pathlib import Path
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
@@ -9,5 +9,6 @@ class Settings(BaseSettings):
     dest_dir: str = "dest"
     sync_secret: str = "dev-secret-change-me"
     cert_dir: str = ".certs"
+
 
 settings = Settings()

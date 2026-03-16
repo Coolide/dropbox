@@ -14,16 +14,17 @@ from watchdog.events import (
 )
 from watchdog.observers import Observer
 
-from src.client.manifest import Manifest, compute_sha256
 from src.client.http import SyncClient
+from src.client.manifest import Manifest, compute_sha256
 from src.client.sync import should_ignore
 
 DEBOUNCE = 0.5
 
+
 class _Handler(FileSystemEventHandler):
     """Translates watchdog events into (relative_path, action) tuples on a queue."""
 
-    def __init__(self, source_dir: Path, queue: "Queue[tuple[str, str]]") -> None:
+    def __init__(self, source_dir: Path, queue: Queue[tuple[str, str]]) -> None:
         self._source_dir = source_dir
         self._queue = queue
 
@@ -51,10 +52,11 @@ class _Handler(FileSystemEventHandler):
             # delete the old path, upload the new destination path
             self._enqueue(self._to_relative(event.src_path), "delete")
             self._enqueue(self._to_relative(event.dest_path), "upload")
-    
+
+
 def _processing_loop(
     source_dir: Path,
-    queue: "Queue[tuple[str, str]]",
+    queue: Queue[tuple[str, str]],
     client: SyncClient,
     manifest: Manifest,
     stop_event: threading.Event,
@@ -74,21 +76,23 @@ def _processing_loop(
                     time.sleep(0.05)
         except Empty:
             continue
-    
+
         for rel_path, action in pending.items():
             abs_path = source_dir / rel_path
             try:
                 if action == "upload" and abs_path.is_file():
                     data = abs_path.read_bytes()
                     client.upload(rel_path, data)
-                    manifest.set(rel_path, sha256=compute_sha256(abs_path), mtime=abs_path.stat().st_mtime)
-                    print(f"[watcher] Uploaded: {rel_path}") #TODO: use logging instead
+                    manifest.set(
+                        rel_path, sha256=compute_sha256(abs_path), mtime=abs_path.stat().st_mtime
+                    )
+                    print(f"[watcher] Uploaded: {rel_path}")  # TODO: use logging instead
                 elif action == "delete":
                     client.delete(rel_path)
                     manifest.remove(rel_path)
-                    print(f"[watcher] Deleted: {rel_path}") #TODO: use logging instead
+                    print(f"[watcher] Deleted: {rel_path}")  # TODO: use logging instead
             except Exception as e:
-                print(f"[watcher] Error syncing {rel_path}: {e}") #TODO: use logging instead
+                print(f"[watcher] Error syncing {rel_path}: {e}")  # TODO: use logging instead
         manifest.save()
 
 
@@ -108,7 +112,7 @@ def start_watcher(
     processing_thread = threading.Thread(
         target=_processing_loop,
         args=(source_dir, queue, client, manifest, stop_event),
-        daemon=True, # ensure thread exits when main thread exits
+        daemon=True,  # ensure thread exits when main thread exits
     )
 
     processing_thread.start()
@@ -118,4 +122,5 @@ def start_watcher(
         observer.stop()
         observer.join()
         processing_thread.join(timeout=2.0)
+
     return stop

@@ -3,8 +3,10 @@
 These tests exercise the entire request pipeline together:
   HMACAuthMiddleware → Routes → Storage
 """
-import pytest
+
 from pathlib import Path
+
+import pytest
 from fastapi.testclient import TestClient
 
 from src.server.app import create_app
@@ -27,6 +29,7 @@ def client(tmp_path: Path) -> TestClient:
 
 # ── Health (no auth required) ─────────────────────────────────────────────────
 
+
 def test_health_no_auth_required(client: TestClient):
     resp = client.get("/health")
     assert resp.status_code == 200
@@ -34,6 +37,7 @@ def test_health_no_auth_required(client: TestClient):
 
 
 # ── HMAC auth enforcement ─────────────────────────────────────────────────────
+
 
 def test_unsigned_request_rejected(client: TestClient):
     resp = client.put("/files/secret.txt", content=b"data")
@@ -48,6 +52,7 @@ def test_wrong_secret_rejected(client: TestClient):
 
 
 # ── PUT ───────────────────────────────────────────────────────────────────────
+
 
 def test_put_creates_file(client: TestClient, tmp_path: Path):
     body = b"hello from integration test"
@@ -67,6 +72,7 @@ def test_put_nested_path(client: TestClient, tmp_path: Path):
 
 # ── GET ───────────────────────────────────────────────────────────────────────
 
+
 def test_get_downloads_file(client: TestClient, tmp_path: Path):
     (tmp_path / "serve.txt").write_bytes(b"serve me")
     headers = sign_request("GET", "/files/serve.txt", b"", SECRET)
@@ -83,6 +89,7 @@ def test_get_missing_file_returns_404(client: TestClient):
 
 # ── DELETE ────────────────────────────────────────────────────────────────────
 
+
 def test_delete_removes_file(client: TestClient, tmp_path: Path):
     (tmp_path / "bye.txt").write_bytes(b"goodbye")
     headers = sign_request("DELETE", "/files/bye.txt", b"", SECRET)
@@ -98,6 +105,7 @@ def test_delete_missing_file_returns_404(client: TestClient):
 
 
 # ── Round-trip ────────────────────────────────────────────────────────────────
+
 
 def test_upload_then_download_roundtrip(client: TestClient):
     """Upload binary data then download it — bytes must be identical."""
