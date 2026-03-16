@@ -17,9 +17,11 @@ dev = [
     "hatchling>=1.29.0",
     "httpx>=0.28.1",
     "mypy>=1.19.1",
+    "pre-commit>=4.5.1",
     "pytest>=9.0.2",
     "pytest-asyncio>=1.3.0",
     "respx>=0.22.0",
+    "ruff>=0.15.6",
 ]
 
 [build-system]
@@ -35,6 +37,19 @@ package = true
 [project.scripts]
 server = "src.server.app:run"
 client = "src.client.cli:main"
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes (unused imports, undefined names, etc.)
+    "I",   # isort (import ordering)
+    "UP",  # pyupgrade (modernise syntax for your Python version)
+]
+fixable = ["ALL"]
 
 [tool.mypy]
 strict = true
