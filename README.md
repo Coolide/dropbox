@@ -19,12 +19,7 @@ A bare-metal, self-hosted file sync tool. Drop files into a local folder and the
 
 ## How it works
 
-```
-[ Client Machine ]                        [ Server Machine ]
-  source_dir/                               dest_dir/
-  └── notes/                                └── notes/
-      └── todo.txt  ──── HTTPS + HMAC ────►     └── todo.txt
-```
+![Sequence Diagram](images/sequence-diagram-high-level.png)
 
 - **Watchdog** monitors the source directory for changes
 - **HMAC-SHA256** signs every request so the server rejects anything not from your client

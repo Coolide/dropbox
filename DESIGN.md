@@ -1,6 +1,6 @@
 # Design Documentation
 
-> Supplementary design notes for [Open Source Dropbox](README.md). See also the [Sequence Diagram](docs/SEQUENCE_DIAGRAM.md).
+> Supplementary design notes for [Open Source Dropbox](README.md).
 
 ## Contents
 
@@ -9,9 +9,6 @@
 - [Design Approach](#design-approach)
 - [Future Work](#future-work)
 - [AI Usage](#ai-usage)
-
-
-![Sequence Diagram](images/sequence-diagram-high-level.png)
 
 
 ## Assumptions
