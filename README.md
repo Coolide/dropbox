@@ -1,6 +1,21 @@
-# Dropbox Sync
+# Open Source Dropbox
 
 A bare-metal, self-hosted file sync tool. Drop files into a local folder and they appear on the server in real time — no cloud, no third party, full control.
+
+## Contents
+
+- [How it works](#how-it-works)
+- [Requirements](#requirements)
+- [Setup](#setup)
+- [Configuration](#configuration)
+- [Running](#running)
+- [All client flags](#all-client-flags)
+- [Tests](#tests)
+- [Project structure](#project-structure)
+- [Security notes](#security-notes)
+- [Design documentation](DESIGN.md)
+
+---
 
 ## How it works
 
